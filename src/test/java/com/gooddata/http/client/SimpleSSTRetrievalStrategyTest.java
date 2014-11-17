@@ -16,7 +16,7 @@ public class SimpleSSTRetrievalStrategyTest {
     @Test
     public void obtainSst() {
         SimpleSSTRetrievalStrategy sstStrategy = new SimpleSSTRetrievalStrategy(TOKEN);
-        assertEquals(TOKEN, sstStrategy.obtainSst());
+        assertEquals(TOKEN, sstStrategy.obtainSst(VerificationLevel.DEFAULT));
     }
 
     @Test(expected = IllegalArgumentException.class)

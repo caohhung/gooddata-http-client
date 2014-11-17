@@ -31,7 +31,7 @@ import static org.apache.commons.lang.Validate.notNull;
 /**
  * This strategy obtains super-secure token via login and password.
  */
-public class LoginSSTRetrievalStrategy implements SSTRetrievalStrategyWithVl {
+public class LoginSSTRetrievalStrategy implements SSTRetrievalStrategy {
 
     public static final String LOGIN_URL = "/gdc/account/login";
     public static final String SST_ENTITY = "userLogin";
@@ -67,16 +67,6 @@ public class LoginSSTRetrievalStrategy implements SSTRetrievalStrategyWithVl {
     @Override
     public HttpHost getTokenHost() {
         return httpHost;
-    }
-
-    @Override
-    public VerificationLevel getDefaultVerificationLevel() {
-        return VerificationLevel.COOKIE;
-    }
-
-    @Override
-    public String obtainSst() {
-        return obtainSst(getDefaultVerificationLevel());
     }
 
     @Override

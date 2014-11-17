@@ -59,7 +59,7 @@ public class LoginSSTRetrievalStrategyTest {
         response.setHeader(SM.SET_COOKIE, "GDCAuthSST=xxxtopsecretcookieSST; path=/gdc/account; secure; HttpOnly");
         when(httpClient.execute(isA(HttpHost.class), isA(HttpPost.class))).thenReturn(response);
 
-        assertEquals("xxxtopsecretcookieSST", sstStrategy.obtainSst());
+        assertEquals("xxxtopsecretcookieSST", sstStrategy.obtainSst(VerificationLevel.DEFAULT));
 
         final ArgumentCaptor<HttpHost> hostCaptor = ArgumentCaptor.forClass(HttpHost.class);
         final ArgumentCaptor<HttpPost> postCaptor = ArgumentCaptor.forClass(HttpPost.class);
@@ -102,7 +102,7 @@ public class LoginSSTRetrievalStrategyTest {
 
         final String postBody = "{\"postUserLogin\":{\"login\":\"" + LOGIN + "\",\"password\":\"" + PASSWORD + "\",\"remember\":0,\"verify_level\":2}}";//TODO: JSON assert
         StringWriter writer = new StringWriter();
-        IOUtils.copy(postCaptor.getValue().getEntity().getContent(), writer, "UTF-8");;
+        IOUtils.copy(postCaptor.getValue().getEntity().getContent(), writer, "UTF-8");
 
         assertEquals(postBody, writer.toString());
         assertEquals("/gdc/account/login", postCaptor.getValue().getURI().getPath());
@@ -114,7 +114,7 @@ public class LoginSSTRetrievalStrategyTest {
         final HttpResponse response = new BasicHttpResponse(statusLine);
         when(httpClient.execute(any(HttpHost.class), any(HttpPost.class))).thenReturn(response);
 
-        sstStrategy.obtainSst();
+        sstStrategy.obtainSst(VerificationLevel.DEFAULT);
 
     }
 }

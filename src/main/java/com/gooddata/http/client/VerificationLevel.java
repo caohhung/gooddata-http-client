@@ -8,6 +8,7 @@ package com.gooddata.http.client;
  * Indicates how credentials (SST and TT) are transfered and checked.
  */
 public enum VerificationLevel {
+
     /** Cookie is used to transfer SST and TT. */
     COOKIE(0),
 
@@ -16,6 +17,8 @@ public enum VerificationLevel {
 
     /** SST and TT must be present in the HTTP header. */
     HEADER(2);
+
+    public static final VerificationLevel DEFAULT = VerificationLevel.COOKIE;
 
     private final int level;
 

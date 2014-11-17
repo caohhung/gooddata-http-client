@@ -4,6 +4,8 @@
  */
 package com.gooddata.http.client;
 
+import org.apache.http.HttpHost;
+
 /**
  * Interface for class which encapsulates SST retrival.
  */
@@ -11,8 +13,16 @@ public interface SSTRetrievalStrategy {
 
     /**
      * Sets SST cookie to HTTP client.
+     * @param verificationLevel Verification level.
      * @return SST
      */
-    String obtainSst();
+    String obtainSst(VerificationLevel verificationLevel);
+
+    /**
+     * Returns host to be used to retrieve TT tokens.
+     * @return http host (or null to retain backward compatibility with
+     * {@link com.gooddata.http.client.SimpleSSTRetrievalStrategy#SimpleSSTRetrievalStrategy(String)})
+     */
+    HttpHost getTokenHost();
 
 }

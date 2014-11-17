@@ -119,16 +119,12 @@ public class GoodDataHttpClient implements HttpClient {
     private String tt;
 
     /**
-     * Constructs the client, with default verification level. If {@code sstStrategy} argument contains an instance of
-     * {@link SSTRetrievalStrategyWithVl} class, the default verification level is determined by calling {@link com.gooddata.http.client.SSTRetrievalStrategyWithVl#getDefaultVerificationLevel()}
-     * otherwise the default verification level is set to {@link VerificationLevel#COOKIE}.
+     * Constructs the client, with default verification level.
      * @param httpClient Http client
      * @param sstStrategy super-secure token (SST) obtaining strategy
      */
     public GoodDataHttpClient(final HttpClient httpClient, final SSTRetrievalStrategy sstStrategy) {
-        this(httpClient, sstStrategy, (sstStrategy instanceof SSTRetrievalStrategyWithVl) ?
-                ((SSTRetrievalStrategyWithVl) sstStrategy).getDefaultVerificationLevel() :
-                VerificationLevel.COOKIE
+        this(httpClient, sstStrategy, VerificationLevel.DEFAULT
         );
     }
 
@@ -217,10 +213,7 @@ public class GoodDataHttpClient implements HttpClient {
                         }
                     }
                     if (doSST) {
-                        sst = (sstStrategy instanceof SSTRetrievalStrategyWithVl) ?
-                                ((SSTRetrievalStrategyWithVl) sstStrategy).obtainSst(verificationLevel) :
-                                sstStrategy.obtainSst();
-
+                        sst = sstStrategy.obtainSst(verificationLevel);
                         if (verificationLevel.getLevel() < 2) {
                             CookieUtils.replaceSst(sst, context, httpHost.getHostName());
                         }
@@ -245,7 +238,7 @@ public class GoodDataHttpClient implements HttpClient {
 
     /**
      * Refresh temporary token.
-     * @param httpHost HTTP host to be used if no token host is provided by the SST retrieval strategy ({@link com.gooddata.http.client.SSTRetrievalStrategyWithVl#getTokenHost()} method)
+     * @param httpHost HTTP host to be used if no token host is provided by the SST retrieval strategy ({@link com.gooddata.http.client.SSTRetrievalStrategy#getTokenHost()} method)
      * @return
      * <ul>
      *     <li><code>true</code> TT refresh successful</li>
@@ -255,9 +248,7 @@ public class GoodDataHttpClient implements HttpClient {
      */
     private boolean refreshTt(final HttpHost httpHost) {
         log.debug("Obtaining TT");
-        final HttpHost tokenHost = (sstStrategy instanceof SSTRetrievalStrategyWithVl) ?
-                ((SSTRetrievalStrategyWithVl) sstStrategy).getTokenHost() :
-                httpHost;
+        final HttpHost tokenHost = sstStrategy.getTokenHost() != null ? sstStrategy.getTokenHost(): httpHost;
 
         final HttpGet getTT = new HttpGet(TOKEN_URL);
         if (verificationLevel.getLevel() > 0) {

@@ -31,6 +31,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class GoodDataHttpClientTest {
@@ -95,7 +96,9 @@ public class GoodDataHttpClientTest {
 
         assertEquals(okResponse, goodDataHttpClient.execute(host, get));
 
-        verify(sstStrategy, only()).obtainSst();
+        verify(sstStrategy).obtainSst(any(VerificationLevel.class));
+        verify(sstStrategy, times(2)).getTokenHost();
+        verifyNoMoreInteractions(sstStrategy);
         verify(httpClient, times(2)).execute(eq(host), eq(get), any(HttpContext.class));
         verify(httpClient, times(4)).execute(eq(host), any(HttpRequest.class), any(HttpContext.class));
     }
@@ -108,7 +111,7 @@ public class GoodDataHttpClientTest {
 
         goodDataHttpClient.execute(host, get);
 
-        verify(sstStrategy, only()).obtainSst();
+        verify(sstStrategy, only()).obtainSst(any(VerificationLevel.class));
         verify(httpClient, only()).execute(eq(host), eq(get), any(HttpContext.class));
         verify(httpClient, only()).execute(eq(host), any(HttpRequest.class));
     }
@@ -130,7 +133,7 @@ public class GoodDataHttpClientTest {
 
         assertEquals(response401, goodDataHttpClient.execute(host, get));
 
-        verify(sstStrategy, never()).obtainSst();
+        verify(sstStrategy, never()).obtainSst(any(VerificationLevel.class));
         verify(httpClient, only()).execute(eq(host), eq(get), any(HttpContext.class));
     }
 
@@ -145,7 +148,7 @@ public class GoodDataHttpClientTest {
 
         assertEquals(okResponse, goodDataHttpClient.execute(host, get));
 
-        verify(sstStrategy, never()).obtainSst();
+        verify(sstStrategy, never()).obtainSst(any(VerificationLevel.class));
         verify(httpClient, only()).execute(eq(host), eq(get), any(HttpContext.class));
     }
 
@@ -159,7 +162,7 @@ public class GoodDataHttpClientTest {
 
         assertEquals(okResponse, goodDataHttpClient.execute(host, get));
 
-        verify(sstStrategy, never()).obtainSst();
+        verify(sstStrategy, never()).obtainSst(any(VerificationLevel.class));
         verify(httpClient, times(2)).execute(eq(host), eq(get), any(HttpContext.class));
         verify(httpClient, times(3)).execute(eq(host), any(HttpRequest.class), any(HttpContext.class));
     }
